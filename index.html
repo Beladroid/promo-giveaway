@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Promo Giveaway</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f6fa;
+      margin: 0;
+      padding: 0;
+      color: #2c3e50;
+    }
+
+    header {
+      background-color: #2980b9;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #27ae60;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #219150;
+    }
+
+    .progress-container {
+      background: #ecf0f1;
+      border-radius: 30px;
+      overflow: hidden;
+      height: 25px;
+      margin: 20px 0;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      background: linear-gradient(to right, #27ae60, #2ecc71);
+      width: 0%;
+      height: 100%;
+      transition: width 0.3s ease-in-out;
+      border-radius: 30px;
+      text-align: center;
+      color: white;
+      line-height: 25px;
+      font-weight: bold;
+    }
+
+    footer {
+      background-color: #2c3e50;
+      color: #bdc3c7;
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #ecf0f1;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .disabled {
+      background-color: #bdc3c7 !important;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Official Promo Giveaway</h1>
+    <p>Fill in your details correctly to qualify</p>
+  </header>
+
+  <div class="container">
+    <form id="promoForm">
+      <!-- Sections 1–5 -->
+      <section class="active">
+        <h2>Section 1: Personal Information</h2>
+        <label>Full Name</label><input type="text" />
+        <label>Email Address</label><input type="email" />
+        <label>Phone Number</label><input type="tel" />
+        <label>Date of Birth</label><input type="date" />
+        <button type="button" onclick="nextSection()">Next</button>
+      </section>
+
+      <section>
+        <h2>Section 2: Location & Demographics</h2>
+        <label>State of Residence</label><input type="text" />
+        <label>Gender</label>
+        <select>
+          <option value="">Select</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+        <label>Highest Qualification</label><input type="text" />
+        <button type="button" onclick="nextSection()">Next</button>
+      </section>
+
+      <section>
+        <h2>Section 3: Banking & Payout</h2>
+        <label>Bank Name</label><input type="text" />
+        <label>Account Number</label><input type="text" />
+        <label>Account Name</label><input type="text" />
+        <label>Preferred Payment Method</label>
+        <select>
+          <option>Bank Transfer</option>
+          <option>Mobile Money</option>
+        </select>
+        <button type="button" onclick="nextSection()">Next</button>
+      </section>
+
+      <section>
+        <h2>Section 4: User Feedback</h2>
+        <label>How did you hear about us?</label><input type="text" />
+        <label>What do you expect from this promo?</label><textarea></textarea>
+        <label>Have you ever participated in giveaways before?</label>
+        <select><option>Yes</option><option>No</option></select>
+        <button type="button" onclick="nextSection()">Next</button>
+      </section>
+
+      <section>
+        <h2>Section 5: Share on WhatsApp</h2>
+        <p>To verify you are human and to complete your application, please share this promo to <strong>5</strong> different WhatsApp groups or contacts:</p>
+        <div class="progress-container">
+          <div class="progress-bar" id="shareProgress">0%</div>
+        </div>
+        <button type="button" onclick="shareWhatsApp()">Share Now</button>
+        <br><br>
+        <button id="submitBtn" class="disabled" disabled type="submit">Submit</button>
+      </section>
+    </form>
+  </div>
+
+  <footer>
+    &copy; 2025 PromoSite. All Rights Reserved. |
+    <a href="terms.html">Terms of Service</a> |
+    <a href="privacy.html">Privacy Policy</a>
+  </footer>
+
+  <script>
+    let current = 0;
+    const sections = document.querySelectorAll("form section");
+    function nextSection() {
+      if (current < sections.length - 1) {
+        sections[current].classList.remove("active");
+        current++;
+        sections[current].classList.add("active");
+      }
+    }
+
+    let shareCount = 0;
+    let lastClick = 0;
+
+    function shareWhatsApp() {
+      const now = Date.now();
+      if (now - lastClick < 3000) {
+        alert("Please take time to actually share the link before clicking again.");
+        return;
+      }
+      lastClick = now;
+
+      shareCount++;
+      let percent = Math.min((shareCount / 5) * 100, 100);
+      const progressBar = document.getElementById("shareProgress");
+      progressBar.style.width = percent + "%";
+      progressBar.textContent = Math.floor(percent) + "%";
+
+      if (shareCount >= 5) {
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.classList.remove("disabled");
+        submitBtn.disabled = false;
+      }
+
+      const msg = encodeURIComponent("Join this amazing promo and stand a chance to win! 👉 example.com");
+      window.open("https://wa.me/?text=" + msg, "_blank");
+    }
+
+    document.getElementById("promoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (shareCount >= 5) {
+        alert("Submitted successfully! We will contact you if you are selected.");
+      } else {
+        alert("Please share to at least 5 contacts/groups first.");
+      }
+    });
+  </script>
+</body>
+</html>
